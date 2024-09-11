@@ -7,5 +7,9 @@ class ProductListCreate(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+class ProductDetail(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
 def index(request):
     return render(request, 'api/index.html')
