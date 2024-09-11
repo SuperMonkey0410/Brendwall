@@ -9,6 +9,3 @@ urlpatterns = [
 ]
 
 
-# router = routers.DefaultRouter()
-# router.register(r'product', ProductViewSet)
-# urlpatterns = router.urls
