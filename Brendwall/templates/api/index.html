@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+</head>
+<body>
+    <h1>Добавить продукт</h1>
+    <form id="product-form">
+        <input type="text" id="name" placeholder="Название" required>
+        <textarea id="description" placeholder="Описание"></textarea>
+        <input type="number" id="price" placeholder="Цена" step="0.01" required>
+        <button type="submit">Отправить</button>
+    </form>
+
+    <h2>Список продуктов</h2>
+    <table id="product-table">
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Цена</th>
+        </tr>
+    </table>
+
+    <script>
+        document.getElementById('product-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const price = document.getElementById('price').value;
+
+            fetch('/api/products/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, description, price }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                loadProducts(); // Обновляем список продуктов
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+
+        function loadProducts() {
+            fetch('/api/products/')
+            .then(response => response.json())
+            .then(data => {
+                const table = document.getElementById('product-table');
+                table.innerHTML = '<tr><th>Название</th><th>Описание</th><th>Цена</th></tr>'; // Очищаем таблицу
+                data.forEach(product => {
+                    const row = table.insertRow();
+                    row.insertCell(0).innerText = product.name;
+                    row.insertCell(1).innerText = product.description;
+                    row.insertCell(2).innerText = product.price;
+                });
+            });
+        }
+
+        // Загружаем продукты при загрузке страницы
+        loadProducts();
+    </script>
+</body>
+</html>
